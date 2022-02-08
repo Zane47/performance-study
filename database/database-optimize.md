@@ -82,13 +82,42 @@ eg. swap -> swappiness
 MySQL官方测试数据库: [employee-data](https://dev.mysql.com/doc/index-other.html)
 [github](https://github.com/datacharmer/test_db)
 
+本地clone -> 上传到linux服务器 -> docker cp到mysql8.0.18的容器中
+
+---
+
 按照其中的`Installation`来进行安装
 
+> mysql < employees.sql
 
+报错:
 
+```
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+```
 
+需要使用
 
-idea中database, 右击show visualization, 查看表之间的关系
+> mysql -u root -pmypwd -t < employees.sql
+>
+> 然后输入密码即可
+>
+
+测试:
+
+mysql -u root -pmypwd -t < test_employees_md5.sql
+
+ps:
+
+直接ide连接然后run sql script即可.
+
+其中的dump文件直接后缀该sql运行
+
+---
+
+idea/datagrip中连接到对应的database, 右击diagrams -> show visualization, 查看表之间的关系
+
+![image-20220208220947109](img/database-optimize/image-20220208220947109.png)
 
 
 
