@@ -98,14 +98,14 @@ ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: N
 
 需要使用
 
-> mysql -u root -pmypwd -t < employees.sql
+> mysql -u root -p -t < employees.sql
 >
 > 然后输入密码即可
 >
 
 测试:
 
-mysql -u root -pmypwd -t < test_employees_md5.sql
+mysql -u root -p -t < test_employees_md5.sql
 
 ps:
 
