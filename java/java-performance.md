@@ -70,37 +70,132 @@ i++与++i到底哪种写法效率更高？
 
 三大类型:
 
-* 标准参数: -help, -server -client, -version -showversion, -cp -classpath
-* -X参数: 非标准化参数
-* -XX参数
+* 标准参数: 
+  * -help
+  * -server -client
+  * -version -showversion
+  * -cp -classpath
+* -X参数: 非标准化参数. 在各个JVM版本中有可能变化(小)
+  * -Xint：解释执行(完全解释执行, 不会把java代码转换成本地代码)
+  * -Xcomp：第一次使用就编译成本地代码
+  * -Xmixed：混合模式, JVM自己来决定是否编译成本地代码
+  * java -version -> 可以通过java -Xint -version来修改
+    java version "1.8.0_301"
+    Java(TM) SE Runtime Environment (build 1.8.0_301-b09)
+    Java HotSpot(TM) 64-Bit Server VM (build 25.301-b09, mixed mode)
+* -XX参数(最常用): 非标转化参数, 相对不稳定, 主要用于JVM调优和Debug
+  * Boolean类型
+    * 格式: `-XX:[t-]<name>`表示启用或者禁用name属性
+    * 例子: -XX:+UseConcMarkSweepGC(CMS垃圾处理器); -XX:+UseG1GC(G1垃圾处理器)
+  * 非Boolean类型
+    * 格式: `-XX：<name> = <value>`表示name属性的值是value
+    * 例子:- XX:MaxGCPauseMillis=500(GC最大停留时间); XX:GCTimeRatio=19
 
+---
 
+-XmX, -Xms: 设置JVM的最大最小内存, 不是X参数，而是XX参数
 
+* -Xms等价于-XX:InitialHeapSize
 
+* -Xmx等价于-XX:MaxHeapSize
 
+-Xss -> ThreadStatckSize
 
-
-
-
-
-
-
+<img src="asset/img/java-performance/image-20220904154346088.png" alt="image-20220904154346088" style="zoom: 67%;" />
 
 
 
 ## 查看运行时JVM参数
 
+查看命令[page](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/index.html)
 
 
 
 
 
+重要!
 
+-XX:+PrintFlagslnitial: 查看初始值
 
+-XX:+PrintFlagsFinal: 查看最终值
+
+-XX:+UnlockExperimentalVMOptions解锁实验参数
+
+-XX:+UnlockDiagnosticVMOptions解锁诊断参数
+
+-XX:+UnlockDiagnosticVMOptions解锁诊断参数
+
+### printFlagsFinal
+
+![image-20220904162652196](asset/img/java-performance/image-20220904162652196.png)
+
+=表示默认值
+
+:=被用户或者JVM修改后的值
+
+### jps
+
+[jps](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/jps.html#CHDCGECD)
+
+查看java进程
+
+```
+> jps -l
+9452 sun.tools.jps.Jps
+```
+
+### jinfo
+
+prints Java configuration information for a specified Java process or core file or a remote debug server. The configuration information includes Java system properties and Java Virtual Machine (JVM) command-line flags.
+
+正在运行JVM中的参数值
+
+```
+> jinfo -flag MaxHeapSize 23789
+-XX:MaxHeapSize = 268435456
+```
+
+![image-20220904164048678](asset/img/java-performance/image-20220904164048678.png)
 
 ## jstat查看虚拟机统计信息
 
 垃圾回收信息, 类加载信息, 代码编译信息
+
+类装载
+
+垃圾收集
+
+JIT编译
+
+```
+>jstat -help
+Usage: jstat -help|-options
+       jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]
+
+Definitions:
+  <option>      An option reported by the -options option
+  <vmid>        Virtual Machine Identifier. A vmid takes the following form:
+                     <lvmid>[@<hostname>[:<port>]]
+                Where <lvmid> is the local vm identifier for the target
+                Java virtual machine, typically a process id; <hostname> is
+                the name of the host running the target Java virtual machine;
+                and <port> is the port number for the rmiregistry on the
+                target host. See the jvmstat documentation for a more complete
+                description of the Virtual Machine Identifier.
+  <lines>       Number of samples between header lines.
+  <interval>    Sampling interval. The following forms are allowed:
+                    <n>["ms"|"s"]
+                Where <n> is an integer and the suffix specifies the units as
+                milliseconds("ms") or seconds("s"). The default units are "ms".
+  <count>       Number of samples to take before terminating.
+  -J<flag>      Pass <flag> directly to the runtime system.
+```
+
+options: -class, -compiler, -gc, -printcompilation
+
+
+
+
 
 
 
